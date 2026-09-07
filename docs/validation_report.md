@@ -9,7 +9,8 @@ Checked `data/raw/prices.csv` (1010 rows) against 6 rules.
 | Duplicate rows | 20 | 20 | Rejected (kept first occurrence) |
 | Valid date | 30 | 26 | Rejected |
 | Missing market | 194 | 171 | Imputed with "Unknown" |
-| Known commodity | 0 | 0 | None found (casing normalized regardless) |
+| Inconsistent commodity casing  | 503| (fixed via normalise)|  Normalised None found  |
+| Unknown commodity | 0 | 0 | None found |
 
 Note: profiler counts are computed independently on the raw file; cleaning
 counts are lower for some rules because earlier rejections (e.g. duplicate

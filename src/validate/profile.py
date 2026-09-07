@@ -9,53 +9,54 @@ raw_path ="data/raw/prices.csv"
 
 def inferred_schema(df):
     print("\n Inferred Schema")
-    print("--------------------------")
+    print("------------------------------------------")
     print(df.dtypes)
 
 def row_count(df):
     print("\n ROW COUNT ")
-    print("--------------------------")
+    print("-----------------------------------------")
     print(len(df))
 
 def missing_values(df):
     print("\n MISSING VALUES PER COLUMN")
-    print("--------------------------")
+    print("----------------------------------------")
     print(df.isna().sum())
 
 def negative_values(df):
     negative_values= rules.rule_positive_price(df)
     print("\n NEGATIVE PRICES ")
-    print("---------------")
+    print("----------------------------------------")
     print(len(negative_values))
 
 def duplicate_ids(df):
     dup_ids = rules.rule_duplicate_ids(df)
     print("\n DUPLICATE IDS ")
-    print("---------------")
+    print("----------------------------------------")
     print(len(dup_ids))
 
 def duplicate_rows(df):
     dup_rows = rules.rule_duplicate_rows(df)
     print("\n DUPLICATE ROWS ")
-    print("---------------")
+    print("------------------------------------------")
     print(len(dup_rows))
 
 def invalid_dates(df):
     bad_dates = rules.rule_valid_date(df)
     print("\n INVALID DATES ")
-    print("---------------")
+    print("----------------------------------------")
     print(len(bad_dates))
 
-def unknown_commodities(df):
-    bad_commodity = rules.rule_known_commodity(df)
-    print("\n UNKNOWN COMMODITIES ")
-    print("---------------")
-    print(len(bad_commodity))
+
+def commodity_category_issues(df):
+    issues = rules.rule_known_commodity(df)
+    print("\n COMMODITY CATEGORY ISSUES ")
+    print("----------------------------------------")
+    print(issues["Reason"].value_counts().reindex(["Inconsistent Category", "Unknown Commodity"], fill_value=0))
 
 
 def summary_statistics(df):
     print("\n SUMMARY STATISTICS (price) ")
-    print("---------------")
+    print("------------------------------------")
     print(df["price"].describe())
 
 def price_histogram(df):
@@ -78,7 +79,7 @@ def run_files(path=raw_path):
     duplicate_ids(df)
     duplicate_rows(df)
     invalid_dates(df)
-    unknown_commodities(df)
+    commodity_category_issues(df)
     summary_statistics(df)
     price_histogram(df)
     

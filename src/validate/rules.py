@@ -2,7 +2,8 @@ import pandas as pd
 
 
 def rule_positive_price(df):
-    neg_prices = df[df["price"] < 0].copy()
+    """Flags rows that have a price of zero or negative"""
+    neg_prices = df[df["price"] <= 0].copy()
     neg_prices["Reason"] = "Negative Price"
     return neg_prices
 
@@ -32,8 +33,27 @@ def rule_missing_market(df):
     return missing_market
 
 
-def rule_known_commodity(df):
+"""def rule_known_commodity(df):
     known = {"maize", "beans"}
     bad_commodity = df[~df["commodities"].str.lower().isin(known)].copy()
     bad_commodity["Reason"] = "Unknown Commodity"
-    return bad_commodity
+    return bad_commodity """
+
+known_commodities = {"Maize", "Beans"}
+
+def rule_known_commodity(df):
+    """Flags commodities that are inconsistently cased/spaced, or genuinely unknown"""
+    normalized = df["commodities"].str.strip().str.title()
+
+    inconsistent_mask = (df["commodities"] != normalized) & normalized.isin(known_commodities)
+    unknown_mask = ~normalized.isin(known_commodities)
+
+    inconsistent = df[inconsistent_mask].copy()
+    inconsistent["Reason"] = "Inconsistent Category"
+    inconsistent["Suggested Value"] = normalized[inconsistent_mask]
+
+    unknown = df[unknown_mask].copy()
+    unknown["Reason"] = "Unknown Commodity"
+    unknown["Suggested Value"] = pd.NA
+
+    return pd.concat([inconsistent, unknown])
